@@ -9,5 +9,5 @@ RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     tmux \
     vim \
-    gzip
+    gzip=1.10-4ubuntu4
 

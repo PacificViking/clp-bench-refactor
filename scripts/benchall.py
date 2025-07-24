@@ -33,26 +33,26 @@ def get_target_from_name(name):
 
 
 benchmarks = [  # benchmark object, arguments
-        (clp_s_bench, {}),
-        (clickhouse_native_json_bench, {
-            'manual_column_names': False,
-            'keys': [],
-            'additional_order_by': [],
-            'timestamp_key': True
-            }),
-        (clp_presto_bench, {
-            'dataset_variation': "cleaned_log"
-            }),
+        #(clp_s_bench, {}),
+        #(clickhouse_native_json_bench, {
+        #    'manual_column_names': False,
+        #    'keys': [],
+        #    'additional_order_by': [],
+        #    'timestamp_key': True
+        #    }),
+        #(clp_presto_bench, {
+        #    'dataset_variation': "cleaned_log"
+        #    }),
         (parquet_bench, {'mode': 'json string'}),
         (parquet_bench, {'mode': 'pairwise arrays'}),
-        (elasticsearch_bench, {}),
-        (overhead_test_bench, {}),
-        (zstandard_bench, {}),
-        (sparksql_bench, {}),
-        (gzip_bench, {}),
+        #(elasticsearch_bench, {}),
+        #(overhead_test_bench, {}),
+        #(sparksql_bench, {}),
+        #(gzip_bench, {}),
+        #(zstandard_bench, {}),
     ]
 
-def run(bencher, kwargs, bench_target, attach=False):
+def run(bencher, kwargs, bench_target, attach=False, attach_on_error=False):
     dataset_name = 'error when finding dataset name'
     bench = None
     try:
@@ -70,7 +70,7 @@ def run(bencher, kwargs, bench_target, attach=False):
         with open((current_dir / 'exceptions.log').resolve(), 'a') as file:
             file.write(f"{statement}\n")
         print(statement)
-        if attach:
+        if attach or attach_on_error:
             if bench is not None:
                 bench.docker_attach()
         else:
@@ -82,7 +82,8 @@ for bencher, kwargs in benchmarks:
 
         #if dataset_name != 'mongod': # only use mongod for now
         #    continue
-        run(bencher, kwargs, bench_target)
+        #run(bencher, kwargs, bench_target)
+        run(bencher, kwargs, bench_target, attach_on_error=True)
         #run(bencher, kwargs, bench_target, attach=True)
 
 #run(sparksql_bench, {}, get_target_from_name('mongod'))
